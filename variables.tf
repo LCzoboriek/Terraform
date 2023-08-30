@@ -1,5 +1,5 @@
 variable "image" {
-  type        = map
+  type        = map(any)
   description = "Image for container"
   default = {
     dev  = "nodered/node-red:latest"
@@ -8,7 +8,7 @@ variable "image" {
 }
 
 variable "ext_port" {
-  type = map
+  type = map(any)
 
 
   validation {

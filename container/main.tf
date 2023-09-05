@@ -7,6 +7,13 @@ resource "docker_container" "nodered_container" {
   }
   volumes {
     container_path = var.container_path_in
-    host_path      = var.host_path_in #This is a way to set host paths without hardcoding, itll locate the working directory using path.cwd
+    volume_name = docker_volume.container_volume.name
+  }
+}
+
+resource "docker_volume" "container_volume" {
+  name = "${var.name_in}-volume"
+  lifecycle {
+    prevent_destroy = false
   }
 }

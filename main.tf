@@ -1,6 +1,7 @@
 locals { # Terraform Locals are named values which can be assigned and used in your code. It mainly serves the purpose of reducing duplication within the Terraform code.
   deployment = {
     nodered = {
+      container_count = length(var.ext_port["nodered"][terraform.workspace])
       image = var.image["nodered"][terraform.workspace]
       int   = 1880
       ext   = var.ext_port["nodered"][terraform.workspace] # So we access the value by specifying its a variable, the ext_port variable, and the value is located within
@@ -8,6 +9,7 @@ locals { # Terraform Locals are named values which can be assigned and used in y
       container_path = "/data"
     }
     influxdb = {
+      container_count = length(var.ext_port["influxdb"][terraform.workspace])
       image          = var.image["influxdb"][terraform.workspace]
       int            = 8086
       ext            = var.ext_port["influxdb"][terraform.workspace]
@@ -29,22 +31,15 @@ module "image" {
   image_in = each.value.image
 }
 
-
-resource "random_string" "random" {
-  for_each = local.deployment
-  length   = 4
-  special  = false
-  upper    = false
-}
-
 module "container" {
   source   = "./container"
   for_each = local.deployment
+  count_in = each.value.container_count
   # count             = local.container_count
-  name_in           = join("-", [each.key, terraform.workspace, random_string.random[each.key].result])
+  name_in           = each.key
   image_in          = module.image["nodered"].image_out
   int_port_in       = each.value.int
-  ext_port_in       = each.value.ext[0]
+  ext_port_in       = each.value.ext
   container_path_in = each.value.container_path
 
 }

@@ -10,6 +10,10 @@ variable "image" {
       dev  = "quay.io/influxdb/influxdb:v2.0.2"
       prod = "quay.io/influxdb/influxdb:v2.0.2"
     }
+    graffana = {
+      dev = "grafana/grafana-enterprise"
+      prod = "grafana/grafana-enterprise"
+    }
   }
 }
 
@@ -28,12 +32,12 @@ variable "ext_port" {
   # }
 }
 
-variable "internal_port" {
-  type    = number
-  default = 1880
-  validation {
-    condition     = var.internal_port == 1880
-    error_message = "The internal port must be 1880"
-  }
-}
+# variable "internal_port" {
+#   type    = number
+#   default = 1880
+#   validation {
+#     condition     = var.internal_port == 1880
+#     error_message = "The internal port must be 1880"
+#   }
+# }
 

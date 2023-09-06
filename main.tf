@@ -15,8 +15,26 @@ locals { # Terraform Locals are named values which can be assigned and used in y
       ext            = var.ext_port["influxdb"][terraform.workspace]
       container_path = "/var/lib/influxdb"
     }
+    graffana = {
+      container_count = length(var.ext_port["graffana"][terraform.workspace]) # This will define the port based on the workspace and the app_container
+      image = var.image["graffana"][terraform.workspace]
+      int = 3000
+      ext = var.ext_port["graffana"][terraform.workspace]
+      container_path = "/var/lib/graffana"
+    }
   }
 }
+
+
+# Graffana task
+# Add a new container 
+# Deploy with node red and influxdb
+#in docs youll find images, ports, etc
+# the container path is set above
+# make sure you define all the variables in the right files
+# 1 instance only
+
+
 
 # Terraform console
 # To access these locals its utilising key/value pairs
@@ -37,7 +55,7 @@ module "container" {
   count_in = each.value.container_count
   # count             = local.container_count
   name_in           = each.key
-  image_in          = module.image["nodered"].image_out
+  image_in          = module.image[each.key].image_out
   int_port_in       = each.value.int
   ext_port_in       = each.value.ext
   container_path_in = each.value.container_path

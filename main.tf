@@ -2,9 +2,16 @@ locals { # Terraform Locals are named values which can be assigned and used in y
   deployment = {
     nodered = {
       image = var.image["nodered"][terraform.workspace]
+      int   = 1880
+      ext   = var.ext_port["nodered"][terraform.workspace] # So we access the value by specifying its a variable, the ext_port variable, and the value is located within
+      # the map of node red, and specifically the workspace we are working within. 
+      container_path = "/data"
     }
     influxdb = {
-      image = var.image["influxdb"][terraform.workspace]
+      image          = var.image["influxdb"][terraform.workspace]
+      int            = 8086
+      ext            = var.ext_port["influxdb"][terraform.workspace]
+      container_path = "/var/lib/influxdb"
     }
   }
 }
@@ -24,19 +31,20 @@ module "image" {
 
 
 resource "random_string" "random" {
-  count   = local.container_count
-  length  = 4
-  special = false
-  upper   = false
+  for_each = local.deployment
+  length   = 4
+  special  = false
+  upper    = false
 }
 
 module "container" {
-  source            = "./container"
-  count             = local.container_count
-  name_in           = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
+  source   = "./container"
+  for_each = local.deployment
+  # count             = local.container_count
+  name_in           = join("-", [each.key, terraform.workspace, random_string.random[each.key].result])
   image_in          = module.image["nodered"].image_out
-  int_port_in       = var.internal_port
-  ext_port_in       = var.ext_port[terraform.workspace][count.index] #This is how you reference your variables
-  container_path_in = "/data"
+  int_port_in       = each.value.int
+  ext_port_in       = each.value.ext[0]
+  container_path_in = each.value.container_path
 
 }

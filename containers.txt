@@ -1,0 +1,4 @@
+nodered-dev-n08i: http://172.17.0.5:1980
+influxdb-dev-t13a: http://172.17.0.2:8186
+graffana-dev-dm8f: http://172.17.0.4:3000
+influxdb-dev-ujfv: http://172.17.0.3:8187

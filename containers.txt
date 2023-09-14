@@ -1,2 +1,5 @@
-graffana-dev-laur: http://172.17.0.2:3000
-graffana-dev-inr3: http://172.17.0.3:3002
+influxdb-dev-ftn3: http://172.17.0.3:8187
+nodered-dev-dewb: http://172.17.0.6:1980
+graffana-dev-lizn: http://172.17.0.4:3000
+graffana-dev-6ukz: http://172.17.0.5:3002
+influxdb-dev-jmlg: http://172.17.0.2:8186

@@ -32,8 +32,8 @@ resource "docker_container" "app_container" {
 }
 
 module "volume" {
-  source = "./volume"
-  count = var.count_in # We need this module to be run the same amount of times as the docker container
+  source       = "./volume"
+  count        = var.count_in # We need this module to be run the same amount of times as the docker container
   volume_count = length(var.volumes_in)
-  volume_name = "${var.name_in}-${terraform.workspace}-${random_string.random[count.index].result}-volume"
+  volume_name  = "${var.name_in}-${terraform.workspace}-${random_string.random[count.index].result}-volume"
 }
